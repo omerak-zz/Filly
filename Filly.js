@@ -56,6 +56,11 @@ class Filly extends HTMLElement {
     }).replace(/\{{(.*?)}}/gm, (a, b) => {
       return eval(this.constructor.unEntity(b));
     });
+    console.log(rendered);
+    rendered = rendered.replace(/<script\b[^>]*>(.*?)<\/script>/gm, (a, b) => {
+      console.log(b);
+      return eval(b).join('');
+    })
     this.shadow.innerHTML = rendered;
   }
 }

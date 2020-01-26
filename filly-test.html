@@ -17,14 +17,18 @@
         </div>
         <div class="content">{{this.props.children}}</div>
         <div>
-          {{{this.data.list.map((item, idx) => {
+        <script>
+          this.data.list.map((item, idx) => {
             return `
               <filly-item
-                check="{{this.props.check}}"
+                check="${this.props.check}"
                 onclick="this.getRootNode().host.onClick(event, ${idx})"
-              >item ${item}</filly-item>
+              >
+                script ${item}
+              </filly-item>
             `
-          })}}}
+          });
+        </script>
         </div>
         <br>
         <div>
