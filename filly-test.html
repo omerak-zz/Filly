@@ -12,16 +12,18 @@
     <template id="filly-component">
       <div class="root">
         <div class="title">
-          {{this.props.title}}
+          ${this.props.title}
           <div class="rounded-triangle"></div>
         </div>
-        <div class="content">{{this.props.children}}</div>
+        <div class="content">${this.props.children}</div>
         <div>
         <script>
           this.data.list.map((item, idx) => {
             return `
               <filly-item
                 check="${this.props.check}"
+                callback="@callback"
+                test-data="@testData.name"
                 onclick="this.getRootNode().host.onClick(event, ${idx})"
               >
                 script ${item}
@@ -42,6 +44,11 @@
           return ['check'];
         }
 
+        testData = {
+          name: 'Omer',
+          Age: 28
+        }
+
         template = '#filly-component'
 
         constructor(props) {
@@ -51,6 +58,10 @@
             list: [1,2,3,5],
             selecteds: []
           };
+        }
+
+        callback() {
+          console.log('callback');
         }
 
         onClick(e, idx) {
@@ -64,8 +75,9 @@
 
     <!-- 2 -->
     <template id="filly-item">
-      <div class="root">
-        <div class="content">{{this.props.children}}</div>
+      <div class="root" onclick="this.getRootNode().host.props.callback()">
+        <div class="content">${this.props.children}</div>
+        ${this.props['test-data']}
       </div>
     </template>
     <script>
