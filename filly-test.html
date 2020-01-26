@@ -32,7 +32,7 @@
         </div>
         <br>
         <div>
-          {{{this.state.selecteds.map((item) => `<p>item ${item}</p>`)}}}
+        <script>this.data.selecteds.map((item) => `<p>item ${item}</p>`)</script>
         </div>
       </div>
     </template>
@@ -48,15 +48,13 @@
           super(props);
     
           this.data = {
-            list: [1,2,3,5]
-          };
-          this.state = {
+            list: [1,2,3,5],
             selecteds: []
           };
         }
 
         onClick(e, idx) {
-          this.state.selecteds.push(idx); 
+          this.data.selecteds.push(idx); 
           this.render();
         }
       }
