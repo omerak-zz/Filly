@@ -3,12 +3,6 @@ class Filly extends HTMLElement {
     globalCSS: '.filly-globals'
   }
 
-  static unEntity(str) {
-    return str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
-  }
-
-  data = {}
-
   constructor(props) {
     super(props);
     this.props = Object.assign({}, props);
@@ -19,7 +13,6 @@ class Filly extends HTMLElement {
     }
 
     this.props.children = this.innerHTML;
-    this.data.children = this.props.children;
   }
 
   connectedCallback() {
@@ -51,12 +44,12 @@ class Filly extends HTMLElement {
 
   render() {
     const html = this.template.innerHTML || '';
-    var rendered = html.replace(/\{{(.*?)}}/gm, (a, b) => {
-      return eval(b);
-    }).replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gm, (a, b) => {
+    var rendered = html.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gm, (a, b) => {
       const str = eval(b);
       return Array.isArray(str) ? str.join('') : str;
-    })
+    }).replace(/\{{(.*?)}}/gm, (a, b) => {
+      return eval(b);
+    });
     this.shadow.innerHTML = rendered;
   }
 }
