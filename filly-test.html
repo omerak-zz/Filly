@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <script src="./Filly.js"></script>
   </head>
   <body>
@@ -40,20 +41,13 @@
     </template>
     <script>
       class FillyComponent extends Filly {
-        static get observedAttributes() {
-          return ['check'];
-        }
-
-        testData = {
-          name: 'Omer',
-          Age: 28
-        }
-
-        template = '#filly-component'
-
         constructor(props) {
           super(props);
-    
+          this.template = '#filly-component'
+          this.testData = {
+            name: 'Omer',
+            Age: 28
+          }
           this.data = {
             list: [1,2,3,5],
             selecteds: []
@@ -69,6 +63,9 @@
           this.render();
         }
       }
+      Object.defineProperty(FillyComponent, 'observedAttributes', {
+        get: function() { return ['check'] }
+      });
       window.customElements.define('filly-component', FillyComponent);
     </script>
     <!-- 1 -->
@@ -82,12 +79,17 @@
     </template>
     <script>
       class FillyItem extends Filly {
-        static get observedAttributes() {
-          return ['check'];
+        constructor(props) {
+          super(props);
+          this.template = '#filly-item';
         }
-
-        template = '#filly-item'
       }
+      FillyItem.observedAttributes = function() {
+        return ['check'];
+      }
+      Object.defineProperty(FillyItem, 'observedAttributes', {
+        get: function() { return ['check'] }
+      });
       window.customElements.define('filly-item', FillyItem);
     </script>
     <!-- 2 -->
