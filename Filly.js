@@ -34,11 +34,6 @@ class Filly extends HTMLElement {
   attributeChangedCallback(attrName, oldVal, newVal) {
     this.props[attrName] = newVal;
     if (this.isConnectionCompleted) {
-      // // other approach
-      // var elems = this.shadow.querySelectorAll(`[${attrName}="${oldVal}"]`);
-      // for (var i = 0; i < elems.length; i++) {
-      //   elems[i].setAttribute(attrName, newVal);
-      // }
       this.render();
     }
   }
@@ -57,6 +52,14 @@ class Filly extends HTMLElement {
 
 Filly.defaults = {
   globalCSS: '.filly-globals'
+};
+
+Filly.getter = function(key, value) {
+  Object.defineProperty(this, key, { get: value });
+};
+
+Filly.setter = function(key, value) {
+  Object.defineProperty(this, key, { set: value });
 };
 
 Filly.byString = function(o, s) {
