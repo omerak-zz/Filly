@@ -64,7 +64,7 @@
         }
       }
       FillyComponent.getter('observedAttributes', function() { return ['check'] })
-      window.customElements.define('filly-component', FillyComponent);
+      FillyComponent.define('filly-component');
     </script>
     <!-- 1 -->
 
@@ -86,7 +86,7 @@
         return ['check'];
       }
       FillyItem.getter('observedAttributes', function() { return ['check'] })
-      window.customElements.define('filly-item', FillyItem);
+      FillyItem.define('filly-item');
     </script>
     <!-- 2 -->
   </body>

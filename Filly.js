@@ -54,6 +54,10 @@ Filly.defaults = {
   globalCSS: '.filly-globals'
 };
 
+Filly.define = function(name) {
+  window.customElements.define(name, this);
+}
+
 Filly.getter = function(key, value) {
   Object.defineProperty(this, key, { get: value });
 };
