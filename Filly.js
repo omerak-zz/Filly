@@ -1,52 +1,41 @@
 class Filly extends HTMLElement {
-  constructor(props) {
+  constructor(props, template) {
     super(props);
     this.props = Object.assign({}, props);
 
     for (var i = 0; i < this.attributes.length; i++) {
       const attr = this.attributes[i]
-      if (attr.value.startsWith('@')) {
-        const val = attr.value.replace('@', '')
-        this.props[attr.name] = this.constructor.byString(this.getRootNode().host, val)
+      if (attr.name.startsWith('.')) {
+        const name = attr.name.replace('.', '');
+        this.props[name] = this.constructor.byString(this.getRootNode().host, attr.value)
       } else {
         this.props[attr.name] = attr.value;
       }
     }
 
     this.props.children = this.innerHTML;
-  }
-
-  connectedCallback() {
-    var template = document.querySelector(this.template).cloneNode(true);
-    var globals = document.querySelectorAll(this.constructor.defaults.globalCSS);
-    if (globals.length > 0) {
-      for (var i = 0; i < globals.length; i++) {
-        template.content.prepend(globals[i].cloneNode(true));
-      }
-    };
-
     this.shadow = this.attachShadow({ mode: 'open' });
     this.template = template;
-    this.isConnectionCompleted = true;
-    this.render();
+    this.renderTemplate();
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {
     this.props[attrName] = newVal;
     if (this.isConnectionCompleted) {
-      this.render();
+      this.renderTemplate();
     }
   }
 
-  render() {
-    const html = this.template.innerHTML || '';
-    var rendered = html.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gm, (a, b) => {
-      const str = eval(b);
-      return Array.isArray(str) ? str.join('') : str;
-    }).replace(/\${(.*?)}/gm, (a, b) => {
-      return eval(b);
-    });
-    this.shadow.innerHTML = rendered;
+  renderTemplate = () => {
+    const globalStyles = document.querySelectorAll(this.constructor.defaults.globalCSS);
+    let template = this.template.bind(this)();
+    if (globalStyles.length > 0) {
+      for (var i = 0; i < globalStyles.length; i++) {
+        template = template + globalStyles[i].cloneNode(true).toString();
+      }
+    };
+    this.isConnectionCompleted = true;
+    this.shadow.innerHTML = template;
   }
 }
 
@@ -80,3 +69,6 @@ Filly.byString = function(o, s) {
   }
   return o;
 }
+
+
+export default Filly;

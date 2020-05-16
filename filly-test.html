@@ -2,89 +2,16 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script src="./Filly.js"></script>
+    <script src="./Filly.js" type="module"></script>
+    <script src="./examples/Pagination/index.js" type="module"></script>
   </head>
   <body>
-    <filly-component title="title" check="test">
+    <f-pagination page-count="5" check="test">
       some kind of children
-    </filly-component>
+    </f-pagination>
 
     <!-- 1 -->
-    <template id="filly-component">
-      <div class="root">
-        <div class="title">
-          ${this.props.title}
-          <div class="rounded-triangle"></div>
-        </div>
-        <div class="content">${this.props.children}</div>
-        <div>
-        <script>
-          this.data.list.map((item, idx) => {
-            return `
-              <filly-item
-                check="${this.props.check}"
-                callback="@callback"
-                test-data="@testData.name"
-                onclick="this.getRootNode().host.onClick(event, ${idx})"
-              >
-                script ${item}
-              </filly-item>
-            `
-          });
-        </script>
-        </div>
-        <br>
-        <div>
-        <script>this.data.selecteds.map((item) => `<p>item ${item}</p>`)</script>
-        </div>
-      </div>
-    </template>
-    <script>
-      class FillyComponent extends Filly {
-        constructor(props) {
-          super(props);
-          this.template = '#filly-component'
-          this.testData = {
-            name: 'Omer',
-            Age: 28
-          }
-          this.data = {
-            list: [1,2,3,5],
-            selecteds: []
-          };
-        }
-
-        callback() {
-          console.log('callback');
-        }
-
-        onClick(e, idx) {
-          this.data.selecteds.push(idx); 
-          this.render();
-        }
-      }
-      FillyComponent.getter('observedAttributes', function() { return ['check'] })
-      FillyComponent.define('filly-component');
-    </script>
-    <!-- 1 -->
-
-    <!-- 2 -->
-    <template id="filly-item">
-      <div class="root" onclick="this.getRootNode().host.props.callback()">
-        <div class="content">${this.props.children}</div>
-        ${this.props['test-data']}
-      </div>
-    </template>
-    <script>
-      class FillyItem extends Filly {
-        constructor(props) {
-          super(props);
-          this.template = '#filly-item';
-        }
-      }
-      FillyItem.getter('observedAttributes', function() { return ['check'] })
-      FillyItem.define('filly-item');
-    </script>
+    
     <!-- 2 -->
   </body>
 </html>
