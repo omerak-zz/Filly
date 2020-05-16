@@ -17,5 +17,7 @@ class Pagination extends Filly {
     this.render();
   }
 }
+
+
 Pagination.getter('observedAttributes', function() { return ['check'] })
 Pagination.define('f-pagination');
