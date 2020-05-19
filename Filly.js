@@ -3,7 +3,38 @@ class Filly extends HTMLElement {
     super(props);
     this.props = Object.assign({}, props);
 
-    for (var i = 0; i < this.attributes.length; i++) {
+    this._handleGlobalStyles();
+    this._handleAttributes();
+
+    this.props.children = this.innerHTML;
+    this.shadow = this.attachShadow({ mode: 'open' });
+    this.template = template;
+  }
+
+  attributeChangedCallback(attrName, oldVal, newVal) {
+    console.log(attrName, oldVal, newVal);
+    this.props[attrName] = newVal;
+    this._updateRendering();
+  }
+
+  connectedCallback() {
+    this._updateRendering();
+  }
+
+  _handleGlobalStyles() {
+    if (Filly._globalStyles === undefined) {
+      Filly._globalStyles = '';
+      const elems = document.querySelectorAll(this.constructor.defaults.globalCSS);
+      if (elems.length > 0) {
+        for (var i = 0; i < elems.length; i++) {
+          Filly._globalStyles = Filly._globalStyles + elems[i].cloneNode(true).outerHTML;
+        }
+      };
+    }
+  }
+
+  _handleAttributes() {
+    for (let i = 0; i < this.attributes.length; i++) {
       const attr = this.attributes[i]
       if (attr.name.startsWith('.')) {
         const name = attr.name.replace('.', '');
@@ -12,30 +43,12 @@ class Filly extends HTMLElement {
         this.props[attr.name] = attr.value;
       }
     }
-
-    this.props.children = this.innerHTML;
-    this.shadow = this.attachShadow({ mode: 'open' });
-    this.template = template;
-    this.renderTemplate();
   }
 
-  attributeChangedCallback(attrName, oldVal, newVal) {
-    this.props[attrName] = newVal;
-    if (this.isConnectionCompleted) {
-      this.renderTemplate();
-    }
-  }
-
-  renderTemplate = () => {
-    const globalStyles = document.querySelectorAll(this.constructor.defaults.globalCSS);
-    let template = this.template.bind(this)();
-    if (globalStyles.length > 0) {
-      for (var i = 0; i < globalStyles.length; i++) {
-        template = template + globalStyles[i].cloneNode(true).toString();
-      }
-    };
-    this.isConnectionCompleted = true;
-    this.shadow.innerHTML = template;
+  _updateRendering = () => {
+    let template = this.template(this.props);
+    
+    this.shadow.innerHTML = template + Filly._globalStyles;
   }
 }
 

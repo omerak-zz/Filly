@@ -2,11 +2,17 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <style class="filly-globals">
+      .clear {
+        clear: both;
+      }
+    </style>
     <script src="./examples/Pagination/index.js" type="module"></script>
   </head>
   <body>
     <f-pagination page-count="5" check="test">
       some kind of children
+      <span slot="element-name">template</span>
     </f-pagination>
 
     <!-- 1 -->
