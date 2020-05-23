@@ -2,10 +2,16 @@ import Filly from '../../Filly.js';
 
 import template from './template.js';
 
+import style from './style.js';
+
 
 class Pagination extends Filly {
+  template = template;
+
+  style = style;
+
   constructor(props) {
-    super(props, template);
+    super(props);
   }
 
   callback() {

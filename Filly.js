@@ -1,5 +1,5 @@
 class Filly extends HTMLElement {
-  constructor(props, template) {
+  constructor(props) {
     super(props);
     this.props = Object.assign({}, props);
 
@@ -8,11 +8,9 @@ class Filly extends HTMLElement {
 
     this.props.children = this.innerHTML;
     this.shadow = this.attachShadow({ mode: 'open' });
-    this.template = template;
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {
-    console.log(attrName, oldVal, newVal);
     this.props[attrName] = newVal;
     this._updateRendering();
   }
@@ -45,10 +43,14 @@ class Filly extends HTMLElement {
     }
   }
 
-  _updateRendering = () => {
-    let template = this.template(this.props);
-    
-    this.shadow.innerHTML = template + Filly._globalStyles;
+  getStyle() {
+    const style = this.style ? this.style() : '';
+    return `<style>${style}</style>`;
+  }
+
+  _updateRendering() {
+    const template = this.template(this.props);
+    this.shadow.innerHTML = template + Filly._globalStyles + this.getStyle();
   }
 }
 
