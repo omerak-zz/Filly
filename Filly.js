@@ -12,15 +12,15 @@ class Filly extends HTMLElement {
 
   attributeChangedCallback(attrName, oldVal, newVal) {
     this.props[attrName] = newVal;
-    if (this.useShadowDOM && this.shadow) {
-      this._updateRendering();
-    } else if (!this.useShadowDOM) {
+    if (this.isComponentConnected) {
       this._updateRendering();
     }
   }
 
   connectedCallback() {
+    this.isComponentConnected = true;
     const styleStatuses = window.__FILLY_STYLES_STATUS;
+    this.template.bind(this);
     if (this.useShadowDOM && !this.shadow) {
       this.shadow = this.attachShadow({ mode: 'open' });
     } else if (!this.useShadowDOM && !styleStatuses[this.tagName]) {
@@ -58,6 +58,11 @@ class Filly extends HTMLElement {
   getStyle() {
     const style = this.style ? this.style() : '';
     return `<style>${style}</style>`;
+  }
+
+  setData(data) {
+    this.data = Object.assign(this.data, data);
+    this._updateRendering();
   }
 
   _updateRendering() {

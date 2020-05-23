@@ -6,14 +6,16 @@ import style from './style.js';
 
 
 class Pagination extends Filly {
-  useShadowDOM = false;
-
   template = template;
 
   style = style;
 
   constructor(props) {
     super(props);
+
+    this.data = {
+      activeIndex: 0
+    }
   }
 
   callback() {
@@ -21,8 +23,7 @@ class Pagination extends Filly {
   }
 
   onClick(e, idx) {
-    this.data.selecteds.push(idx); 
-    this.render();
+    this.setData({ activeIndex: idx });
   }
 }
 
