@@ -1,5 +1,5 @@
 export default () => /*css*/`
-  :host {
+  .root {
     display: block;
     background: #eeeeee;
   }

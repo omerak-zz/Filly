@@ -2,20 +2,32 @@ class Filly extends HTMLElement {
   constructor(props) {
     super(props);
     this.props = Object.assign({}, props);
+    this.useShadowDOM = true;
 
     this._handleGlobalStyles();
     this._handleAttributes();
 
     this.props.children = this.innerHTML;
-    this.shadow = this.attachShadow({ mode: 'open' });
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {
     this.props[attrName] = newVal;
-    this._updateRendering();
+    if (this.useShadowDOM && this.shadow) {
+      this._updateRendering();
+    } else if (!this.useShadowDOM) {
+      this._updateRendering();
+    }
   }
 
   connectedCallback() {
+    const styleStatuses = window.__FILLY_STYLES_STATUS;
+    if (this.useShadowDOM && !this.shadow) {
+      this.shadow = this.attachShadow({ mode: 'open' });
+    } else if (!this.useShadowDOM && !styleStatuses[this.tagName]) {
+      const style = this.getStyle();
+      document.head.insertAdjacentHTML('beforeend', style);
+      styleStatuses[this.tagName] = true;
+    }
     this._updateRendering();
   }
 
@@ -50,9 +62,16 @@ class Filly extends HTMLElement {
 
   _updateRendering() {
     const template = this.template(this.props);
-    this.shadow.innerHTML = template + Filly._globalStyles + this.getStyle();
+    if (this.useShadowDOM) {
+      this.shadow.innerHTML = template + Filly._globalStyles + this.getStyle();
+    } else {
+      this.innerHTML = template;
+    }
   }
 }
+
+
+window.__FILLY_STYLES_STATUS = {};
 
 Filly.defaults = {
   globalCSS: '.filly-globals'

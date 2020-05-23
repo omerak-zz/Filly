@@ -6,6 +6,8 @@ import style from './style.js';
 
 
 class Pagination extends Filly {
+  useShadowDOM = false;
+
   template = template;
 
   style = style;
